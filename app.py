@@ -47,9 +47,6 @@ if st.button("Predict Max Load Tons"):
             'Material': [Material]  # Ensure correct variable name
         })
 
-        # Debugging: Print column names before transformation
-        st.write("Expected Columns:", preprocessor_selected.feature_names_in_)
-        st.write("Input Data Columns:", input_data.columns)
 
         try:
             processed_data = preprocessor_selected.transform(input_data)
