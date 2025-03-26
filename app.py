@@ -27,7 +27,7 @@ model_choice = st.sidebar.radio("Select Model", ("Essential Features Model", "Al
 st.header("Input Bridge Data (Essential Only)")
 
 # User inputs for essential features
-Age = st.number_input("Age_years", min_value=0, max_value=100, value=30)
+Age = st.number_input("Age", min_value=0, max_value=100, value=30)
 Span_ft = st.number_input("Span ft", min_value=100, max_value=600, value=300)
 Deck_Width_ft = st.number_input("Deck width ft", min_value=20, max_value=60, value=50)
 Condition_rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
