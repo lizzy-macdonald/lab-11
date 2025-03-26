@@ -39,11 +39,11 @@ if st.button("Predict Max Load Tons"):
     if model_choice == "Essential Features Model":
         # Build a DataFrame from the essential features only
         input_data = pd.DataFrame({
-            'Age': [Age],
-            'Span ft': [Span ft],
-            'Deck width ft': [Deck Width ft],
-            'Condition Rating': [Condition rating],
-            'Num Lanes': [Num Lanes],
+            'Age': [Age_Years],
+            'Span ft': [Span_ft],
+            'Deck width ft': [Deck_Width_ft],
+            'Condition Rating': [Condition_Rating],
+            'Num Lanes': [Num_Lanes],
             'Material': [Material]
         })
         # Preprocess input using the selected-features preprocessor
