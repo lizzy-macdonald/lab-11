@@ -40,10 +40,10 @@ if st.button("Predict Max Load Tons"):
         # Build a DataFrame from the essential features only
         input_data = pd.DataFrame({
             'Age': [Age],
-            'Span ft': [Span_ft],
-            'Deck width ft': [Deck_Width_ft],
-            'Condition Rating': [Condition_rating],
-            'Num Lanes': [Num_Lanes],
+            'Span ft': [Span ft],
+            'Deck width ft': [Deck Width ft],
+            'Condition Rating': [Condition rating],
+            'Num Lanes': [Num Lanes],
             'Material': [Material]
         })
         # Preprocess input using the selected-features preprocessor
@@ -55,7 +55,7 @@ if st.button("Predict Max Load Tons"):
         default_all = pd.read_csv('default_all_features.csv', index_col=0)
         # Now, 'default_all' contains all the features expected by the preprocessor.
         # Overwrite the essential features with user inputs
-        default_all.loc[0, 'Age'] = Age
+        default_all.loc[0, 'Age'] = Age_Years
         default_all.loc[0, 'Span ft'] = Span_ft
         default_all.loc[0, 'Deck width ft'] = Deck_Width_ft
         default_all.loc[0, 'Condition Rating'] = Condition_rating
