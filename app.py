@@ -24,28 +24,25 @@ Condition_Rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=1
 Num_Lanes = st.number_input("Num Lanes", min_value=1, max_value=6, value=6)
 Material = st.selectbox("Material", options=["Steel", "Composite", "Concrete"])
 
-# Convert Material to match expected categories
-expected_materials = preprocessor_selected.named_transformers_['Material'].categories_[0]  # Extract expected categories
+# Debugging Output
+st.write("Preprocessor Named Transformers:", preprocessor_selected.named_transformers_)
+st.write("Preprocessor Feature Names:", preprocessor_selected.feature_names_in_)
 
-if Material not in expected_materials:
-    st.error(f"Unexpected material: {Material}. Expected: {expected_materials}")
-    st.stop()
-
-# Ensure Material is encoded correctly
+# Ensure input_data matches expected format
 input_data = pd.DataFrame({
     'Age': [Age],
     'Span ft': [Span_ft],
     'Deck width ft': [Deck_Width_ft],
     'Condition Rating': [Condition_Rating],
     'Num Lanes': [Num_Lanes],
-    'Material': [Material]  # Keep as string; let preprocessor handle encoding
+    'Material': [Material]  # Let preprocessor handle encoding
 })
 
-# Handle missing columns
+# Align columns to preprocessor
 expected_columns = preprocessor_selected.feature_names_in_
 input_data = input_data.reindex(columns=expected_columns, fill_value=np.nan)  # Fill missing values with NaN
 
-# Debugging output
+# Debugging: Check final input format
 st.write("Final Input Data:", input_data)
 
 # When the user clicks the Predict button
