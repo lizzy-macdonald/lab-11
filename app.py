@@ -23,7 +23,8 @@ default_values = {
 st.title("Lab 11 Bridge Data")
 
 # Sidebar: let the user choose which model to use
-model_choice = st.sidebar.radio("Select Model", ("Essential Features Model", "All Features Model"))
+model_choice = st.sidebar.radio("Select Model", 
+("Essential Features Model", "All Features Model"))
 st.header("Input Bridge Data (Essential Only)")
 
 # User inputs for essential features
@@ -42,7 +43,7 @@ if st.button("Predict Max Load Tons"):
             'Age': [Age],
             'Span ft': [Span_ft],
             'Deck width ft': [Deck_Width_ft],
-            'Condition Rating': [Condition_rating],
+            'Condition Rating': [Condition_Rating],
             'Num Lanes': [Num_Lanes],
             'Material': [Material]
         })
@@ -55,10 +56,10 @@ if st.button("Predict Max Load Tons"):
         default_all = pd.read_csv('default_all_features.csv', index_col=0)
         # Now, 'default_all' contains all the features expected by the preprocessor.
         # Overwrite the essential features with user inputs
-        default_all.loc[0, 'Age'] = Age
+        default_all.loc[0, 'Age'] = Age_Years
         default_all.loc[0, 'Span ft'] = Span_ft
         default_all.loc[0, 'Deck width ft'] = Deck_Width_ft
-        default_all.loc[0, 'Condition Rating'] = Condition_rating
+        default_all.loc[0, 'Condition Rating'] = Condition_Rating
         default_all.loc[0, 'Num Lanes'] = Num_Lanes
         default_all.loc[0, 'Material'] = Material
         
