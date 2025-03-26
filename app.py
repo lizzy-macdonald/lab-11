@@ -30,7 +30,7 @@ st.header("Input Bridge Data (Essential Only)")
 Age = st.number_input("Age", min_value=0, max_value=100, value=30)
 Span_ft = st.number_input("Span ft", min_value=100, max_value=600, value=300)
 Deck_Width_ft = st.number_input("Deck width ft", min_value=20, max_value=60, value=50)
-Condition_rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
+Condition_Rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
 Num_Lanes = st.number_input("Num Lanes", min_value=1, max_value=6, value=6)
 Material = st.selectbox("Material", options=["Steel", "Composite", "Concrete"])
 
