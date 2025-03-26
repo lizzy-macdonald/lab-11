@@ -24,28 +24,3 @@ Deck_Width_ft = st.number_input("Deck width ft", min_value=20, max_value=60, val
 Condition_rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
 Num_Lanes = st.number_input("Num Lanes", min_value=1, max_value=6, value=6)
 Material = st.selectbox("Material", options=["Steel", "Composite", "Concrete"])
-
-if st.button("Predict Max Load Tons"):
-    if model_choice == "Essential Features Model":
-        # Create input DataFrame
-        input_data = pd.DataFrame({
-            'Age': [Age],
-            'Span ft': [Span_ft],
-            'Deck width ft': [Deck_Width_ft],
-            'Condition Rating': [Condition_rating],
-            'Num Lanes': [Num_Lanes],
-            'Material': [Material]
-        })
-
-        st.write("Expected Columns:", preprocessor_selected.feature_names_in_)
-        st.write("Input Data Columns:", input_data.columns)  # Now inside the block
-
-        try:
-            processed_data = preprocessor_selected.transform(input_data)
-            prediction = model_selected.predict(processed_data)
-            st.success(f"Predicted Max Load Tons: {prediction[0][0]:,.2f}")
-        except Exception as e:
-            st.error(f"Error in transformation or prediction: {e}")
-
-    else:
-        st.error("All Features Model not implemented yet.")
