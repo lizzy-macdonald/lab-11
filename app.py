@@ -12,12 +12,12 @@ preprocessor_all = joblib.load('preprocessor_all.pkl')
 
 # === Define default values for non-essential features for the full model ===
 default_values = {
-  'Age': 30,  # Will be overwritten by user input
-  'Span ft': 300,  # Will be overwritten by user input
-  'Deck width ft': 50,  # Will be overwritten by user input
+  'Age': 30,  
+  'Span ft': 300,  
+  'Deck width ft': 50,  
   'Condition Rating': 4,
-  'Num Lanes': 6,  # Will be overwritten by user input
-  'Material': 'Steel',  # Will be overwritten by user input
+  'Num Lanes': 6,  
+  'Material': 'Steel',
 }
 
 st.title("Lab 11 Bridge Data")
@@ -39,34 +39,37 @@ if st.button("Predict Max Load Tons"):
     if model_choice == "Essential Features Model":
         # Build a DataFrame from the essential features only
         input_data = pd.DataFrame({
-            'Age': [Age_Years],
+            'Age': [Age],
             'Span ft': [Span_ft],
             'Deck width ft': [Deck_Width_ft],
-            'Condition Rating': [Condition_Rating],
+            'Condition Rating': [Condition_rating],
             'Num Lanes': [Num_Lanes],
-            'Material': [Material]
+            'Material': [Material]  # Ensure correct variable name
         })
-        # Preprocess input using the selected-features preprocessor
-        processed_data = preprocessor_selected.transform(input_data)
-        # Get prediction from the essential-features model
-        prediction = model_selected.predict(processed_data)
-        st.success(f"Predicted Max Load Tons (Essential Model): ${prediction[0][0]:,.2f}")
+
+        # Debugging: Print column names before transformation
+        st.write("Expected Columns:", preprocessor_selected.feature_names_in_)
+        st.write("Input Data Columns:", input_data.columns)
+
+        try:
+            processed_data = preprocessor_selected.transform(input_data)
+            prediction = model_selected.predict(processed_data)
+            st.success(f"Predicted Max Load Tons (Essential Model): {prediction[0][0]:,.2f}")
+        except Exception as e:
+            st.error(f"Error in transformation or prediction: {e}")
+
     else:
-        default_all = pd.read_csv('default_all_features.csv', index_col=0)
-        # Now, 'default_all' contains all the features expected by the preprocessor.
-        # Overwrite the essential features with user inputs
-        default_all.loc[0, 'Age'] = Age_Years
-        default_all.loc[0, 'Span ft'] = Span_ft
-        default_all.loc[0, 'Deck width ft'] = Deck_Width_ft
-        default_all.loc[0, 'Condition Rating'] = Condition_rating
-        default_all.loc[0, 'Num Lanes'] = Num_Lanes
-        default_all.loc[0, 'Material'] = Material
-        
-        processed_data = preprocessor_all.transform(default_all)
-        prediction = model_all.predict(processed_data)
-        st.success(f"Predicted Max Load Tons (All Features Model): ${prediction[0][0]:,.2f}")
-
-
-st.write("Expected Columns:", preprocessor_selected.feature_names_in_)
-st.write("Input Data Columns:", input_data.columns)
-
+        try:
+            default_all = pd.read_csv('default_all_features.csv', index_col=0)
+            default_all.loc[0, 'Age'] = Age
+            default_all.loc[0, 'Span ft'] = Span_ft
+            default_all.loc[0, 'Deck width ft'] = Deck_Width_ft
+            default_all.loc[0, 'Condition Rating'] = Condition_rating
+            default_all.loc[0, 'Num Lanes'] = Num_Lanes
+            default_all.loc[0, 'Material'] = Material
+            
+            processed_data = preprocessor_all.transform(default_all)
+            prediction = model_all.predict(processed_data)
+            st.success(f"Predicted Max Load Tons (All Features Model): {prediction[0][0]:,.2f}")
+        except Exception as e:
+            st.error(f"Error in transformation or prediction: {e}")
