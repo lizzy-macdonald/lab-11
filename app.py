@@ -13,8 +13,8 @@ preprocessor_all = joblib.load('preprocessor_all.pkl')
 # === Define default values for non-essential features for the full model ===
 default_values = {
   'Age': 30,  # Will be overwritten by user input
-  'Span ft': 1500,  # Will be overwritten by user input
-  'Deck width ft': 8000,  # Will be overwritten by user input
+  'Span ft': 300,  # Will be overwritten by user input
+  'Deck width ft': 50,  # Will be overwritten by user input
   'Condition Rating': 4,
   'Num Lanes': 6,  # Will be overwritten by user input
   'Material': 'Steel',  # Will be overwritten by user input
@@ -27,9 +27,9 @@ model_choice = st.sidebar.radio("Select Model", ("Essential Features Model", "Al
 st.header("Input Bridge Data (Essential Only)")
 
 # User inputs for essential features
-Age = st.number_input("Age_years", min_value=0, max_value=200, value=30)
-Span_ft = st.number_input("Span ft", min_value=300, max_value=10000, value=1500)
-Deck_Width_ft = st.number_input("Deck width ft", min_value=500, max_value=50000, value=8000)
+Age = st.number_input("Age_years", min_value=0, max_value=100, value=30)
+Span_ft = st.number_input("Span ft", min_value=100, max_value=600, value=300)
+Deck_Width_ft = st.number_input("Deck width ft", min_value=20, max_value=60, value=50)
 Condition_rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
 Num_Lanes = st.number_input("Num Lanes", min_value=1, max_value=6, value=6)
 Material = st.selectbox("Material", options=["Steel", "Composite", "Concrete"])
