@@ -65,3 +65,8 @@ if st.button("Predict Max Load Tons"):
         processed_data = preprocessor_all.transform(default_all)
         prediction = model_all.predict(processed_data)
         st.success(f"Predicted Max Load Tons (All Features Model): ${prediction[0][0]:,.2f}")
+
+
+st.write("Expected Columns:", preprocessor_selected.feature_names_in_)
+st.write("Input Data Columns:", input_data.columns)
+
