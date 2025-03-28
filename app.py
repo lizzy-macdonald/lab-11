@@ -1,12 +1,15 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-import joblib
+import joblib 
 import pandas as pd
+import os
+from joblib import load
 
 # Load the trained model and preprocessing objects
 model = tf.keras.models.load_model("tf_bridge_model.h5")
-scaler = joblib.load("scaler.pkl")
+file_path = os.path.join(os.getcwd(), "scaler.pkl")
+scaler = load(file_path)
 encoder = joblib.load("encoder.pkl")
 
 # Streamlit UI
