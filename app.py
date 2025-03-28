@@ -1,44 +1,67 @@
 import streamlit as st
-import numpy as np
-import tensorflow as tf
-import joblib 
 import pandas as pd
-import os
-from joblib import load
+import joblib
+from tensorflow import keras
+import tensorflow as tf
 
-# Load the trained model and preprocessing objects
-model = tf.keras.models.load_model("tf_bridge_model.h5")
-file_path = "scalar.pkl"  # Update with your actual file path
+# === Load pre-trained models and preprocessors ===
+model_selected = keras.models.load_model('model_selected.h5')
+model_all = keras.models.load_model('model_all.h5')
+preprocessor_selected = joblib.load('preprocessor_selected.pkl')
+preprocessor_all = joblib.load('preprocessor_all.pkl')
 
-if os.path.exists(file_path):
-    scaler = load(file_path)
-else:
-    raise FileNotFoundError(f"File not found: {file_path}. Ensure the file is uploaded and accessible.")
-    
-encoder = joblib.load("encoder.pkl")
+# === Define default values for non-essential features for the full model ===
+default_values = {
+  'Age': 30,  # Will be overwritten by user input
+  'Span ft': 300,  # Will be overwritten by user input
+  'Deck width ft': 20,  # Will be overwritten by user input
+  'Condition Rating': 4,
+  'Num Lanes': 6,  # Will be overwritten by user input
+  'Material': 'Steel',  # Will be overwritten by user input
+}
 
-# Streamlit UI
-st.title("Bridge Max Load Prediction App")
-st.write("Enter bridge details to predict the maximum load capacity in tons.")
+st.title("Lab 11 Bridge Data Prediction")
 
-# User Inputs
-span_ft = st.number_input("Span (ft):", min_value=10, max_value=1000, value=100)
-deck_width_ft = st.number_input("Deck Width (ft):", min_value=5, max_value=200, value=20)
-age_years = st.number_input("Age (Years):", min_value=0, max_value=150, value=30)
-num_lanes = st.number_input("Number of Lanes:", min_value=1, max_value=10, value=2)
-condition_rating = st.slider("Condition Rating (1=Poor, 5=Excellent):", min_value=1, max_value=5, value=3)
+# Sidebar: let the user choose which model to use
+model_choice = st.sidebar.radio("Select Model", ("Essential Features Model", "All Features Model"))
+st.header("Input Bridge Data (Essential Only)")
 
-# Material Selection
-material_options = encoder.categories_[0]
-material = st.selectbox("Bridge Material:", material_options)
+# User inputs for essential features
+Age = st.number_input("Age_years", min_value=0, max_value=200, value=30)
+Span_ft = st.number_input("Span ft", min_value=0, max_value=300, value=600)
+Deck_Width_ft = st.number_input("Deck width ft", min_value=0, max_value=20, value=50)
+Condition_rating = st.number_input("Deck Rating (1-5)", min_value=1, max_value=10, value=4)
+Num_Lanes = st.number_input("Num Lanes", min_value=1, max_value=6, value=6)
+Material = st.selectbox("Material", options=["Steel", "Composite", "Concrete"])
 
-# Preprocessing user input
-material_encoded = encoder.transform([[material]])
-user_input = np.array([[span_ft, deck_width_ft, age_years, num_lanes, condition_rating]])
-user_input_scaled = scaler.transform(user_input)
-user_input_final = np.hstack((user_input_scaled, material_encoded))
-
-# Predict Button
-if st.button("Predict Max Load"):
-    prediction = model.predict(user_input_final)
-    st.success(f"Predicted Maximum Load Capacity: {prediction[0][0]:.2f} tons")
+# When the user clicks the Predict button
+if st.button("Predict Max Load Tons"):
+    if model_choice == "Essential Features Model":
+        # Build a DataFrame from the essential features only
+        input_data = pd.DataFrame({
+            'Age': [Age],
+            'Span ft': [Span_ft],
+            'Deck width ft': [Deck_Width_ft],
+            'Condition Rating': [Condition_rating],
+            'Num Lanes': [Num_Lanes],
+            'Material': [Material]
+        })
+        # Preprocess input using the selected-features preprocessor
+        processed_data = preprocessor_selected.transform(input_data)
+        # Get prediction from the essential-features model
+        prediction = model_selected.predict(processed_data)
+        st.success(f"Predicted Max Load Tons (Essential Model): ${prediction[0][0]:,.2f}")
+    else:
+        default_all = pd.read_csv('default_all_features.csv', index_col=0)
+        # Now, 'default_all' contains all the features expected by the preprocessor.
+        # Overwrite the essential features with user inputs
+        default_all.loc[0, 'Age'] = Age
+        default_all.loc[0, 'Span ft'] = Span_ft
+        default_all.loc[0, 'Deck width ft'] = Deck_Width_ft
+        default_all.loc[0, 'Condition Rating'] = Condition_rating
+        default_all.loc[0, 'Num Lanes'] = Num_Lanes
+        default_all.loc[0, 'Material'] = Material
+        
+        processed_data = preprocessor_all.transform(default_all)
+        prediction = model_all.predict(processed_data)
+        st.success(f"Predicted Max Load Tons (All Features Model): ${prediction[0][0]:,.2f}")
