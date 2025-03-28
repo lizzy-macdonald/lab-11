@@ -8,8 +8,13 @@ from joblib import load
 
 # Load the trained model and preprocessing objects
 model = tf.keras.models.load_model("tf_bridge_model.h5")
-file_path = os.path.join(os.getcwd(), "scaler.pkl")
-scaler = load(file_path)
+file_path = "scalar.pkl"  # Update with your actual file path
+
+if os.path.exists(file_path):
+    scaler = load(file_path)
+else:
+    raise FileNotFoundError(f"File not found: {file_path}. Ensure the file is uploaded and accessible.")
+    
 encoder = joblib.load("encoder.pkl")
 
 # Streamlit UI
